@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>如何让 Cocoapods 不同版本共存 | 平行世界</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/7.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">如何让 Cocoapods 不同版本共存</h1><a id="logo" href="/.">平行世界</a><p class="description"></p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">如何让 Cocoapods 不同版本共存</h1><div class="post-meta">Jan 4, 2017<span> | </span><span class="category"><a href="/categories/工具/">工具</a></span></div><div class="post-content"><p>公司目前用的 cocoapods 版本是0.35，而平时自己研究别人源码用的都是1.0以上的版本。如果同时安装两个版本，再使用 <code>pod</code> 命令时，总是产生冲突，容易出错。此时两个版本的 cocoapods 会安装在同一个环境下，所以考虑如何让两个版本的 ，甚至多个版本的 cocoapods 安装在不同的环境下，那么版本共存和切换就有了可能性。</p>
+<h1 id="渔"><a href="#渔" class="headerlink" title="渔"></a>渔</h1><p>首先我们从 cocoapods 是如何安装的入手分析。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo gem install cocoapods</div></pre></td></tr></table></figure>
+<p>这段代码是最基本的安装命令，执行后会安装最新的 cocoapods 版本。注意到，用的是 gem 命令，gem 又是个啥呢？</p>
+<h2 id="gem"><a href="#gem" class="headerlink" title="gem"></a>gem</h2><p><strong>gem 是封装起来的 Ruby 应用程序或代码库，终端使用的 gem 命令，是指通过 RubyGems 管理 Gem 包。也就是说 cocoapods 是一个 Ruby 代码包，用 gem 来安装。</strong></p>
+<p>如果有个管理工具，可以安装和管理多个 Ruby 环境，在每个 Ruby 环境中，用 gem 安装 cocoapods，不就实现了不同版本的 cocoapods 共存了吗？ruby 刚好有个版本管理工具，可以做到这一点。</p>
+<h2 id="RVM"><a href="#RVM" class="headerlink" title="RVM"></a>RVM</h2><p><strong>RVM 用于帮助你安装 Ruby 环境，帮你管理多个 Ruby 环境，帮你管理你开发的每个 Ruby 应用使用机器上哪个 Ruby 环境。</strong></p>
+<p>总结下来就是，使用 RVM 安装不同版本的 Ruby 环境，在每个环境中安装 cocoapods，此时每个 Ruby 环境中的 cocoapods 可以不同。</p>
+<p>渔完了，接下来是鱼。</p>
+<h1 id="鱼"><a href="#鱼" class="headerlink" title="鱼"></a>鱼</h1><p>需要 cocoapods 版本切换的你，肯定在机子上已经安装好了某个版本的 cocoapods，为了避免引起冲突，先把机器上的 cocoapods 卸载干净。</p>
+<h2 id="卸载当前机器上的-cocoapods"><a href="#卸载当前机器上的-cocoapods" class="headerlink" title="卸载当前机器上的 cocoapods"></a>卸载当前机器上的 cocoapods</h2><ol>
+<li>终端输入 <code>gem list</code> ，查看当前 gem 下安装的所有包</li>
+<li>输入命令 <code>sudo gem uninstall XXX</code> ，XXX 是你要卸载的包名</li>
+<li>卸载步骤1中所有 cocoapods 开头的包</li>
+<li>反复执行前面几步，直到所有的 cocoapods 开头的包都已经被卸载了</li>
+</ol>
+<h2 id="安装-rvm-和多个版本的-Ruby"><a href="#安装-rvm-和多个版本的-Ruby" class="headerlink" title="安装 rvm 和多个版本的 Ruby"></a>安装 rvm 和多个版本的 Ruby</h2><ol>
+<li>安装 rvm，使用命令 <code>curl -L get.rvm.io | bash -s stable &amp;&amp; source ~/.rvm/scripts/rvm</code></li>
+<li>到 <a href="">https://rvm.io/binaries</a> 下载相应版本的ruby包</li>
+<li>执行 <code>rvm mount ~/Downloads/ruby-2.2.3.tar.bz2</code> ，其中 ruby-2.2.3.tar.bz2 是你下载好的 ruby 包，按自己的需求可以多安装几个版本</li>
+<li>执行 <code>rvm list</code> 可查看当前安装的 ruby 版本列表，执行 <code>rvm use &lt;Version&gt;</code> 可切换到不同版本的 ruby</li>
+<li>在某个 ruby 版本下，安装指定版本的 cocoapods，参见下面内容</li>
+</ol>
+<h2 id="如何正确的安装-cocoapods"><a href="#如何正确的安装-cocoapods" class="headerlink" title="如何正确的安装 cocoapods"></a>如何正确的安装 cocoapods</h2><p>如果你是 mac 的10.11及以上系统，需要使用命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo gem install cocoapods -v &lt;Version&gt; -n /usr/local/bin</div></pre></td></tr></table></figure>
+<p>否则的话使用命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo gem install cocoapods -v &lt;Version&gt;</div></pre></td></tr></table></figure>
+<h2 id="我安装的版本对应表"><a href="#我安装的版本对应表" class="headerlink" title="我安装的版本对应表"></a>我安装的版本对应表</h2><p>由于 ruby 版本不同，可安装的 cocoapods 版本也就不同，下面是我已经验证可行的版本对应关系。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">ruby version</th>
+<th style="text-align:center">cocoapods version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">2.1.0</td>
+<td style="text-align:center">0.35</td>
+</tr>
+<tr>
+<td style="text-align:center">2.2.0</td>
+<td style="text-align:center">0.39</td>
+</tr>
+<tr>
+<td style="text-align:center">2.2.3</td>
+<td style="text-align:center">1.0.1</td>
+</tr>
+</tbody>
+</table>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ul>
+<li><a href="">https://henter.me/post/ruby-rvm-gem-rake-bundle-rails.html</a></li>
+<li><a href="">http://manongs.com/a/GQOrmm</a></li>
+</ul>
+</div><div class="tags"></div><div class="post-nav"><a href="/2017/09/04/Java动态代理/" class="pre">Java动态代理</a><a href="/2016/12/30/how-to-build-my-personal-website/" class="next">搭建博客（Github+Hexo+文章管理）</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://parallelworld.pw"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/blog/" style="font-size: 15px;">blog</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/09/06/浅谈ifelse/">浅谈ifelse</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/06/Java读写excel文件/">Java读写excel文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/04/Java动态代理/">Java动态代理</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/04/switch-version-of-cocoapods/">如何让 Cocoapods 不同版本共存</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/30/how-to-build-my-personal-website/">搭建博客（Github+Hexo+文章管理）</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2017 <a href="/." rel="nofollow">平行世界.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
