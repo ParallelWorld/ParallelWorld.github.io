@@ -72,39 +72,6 @@
   </entry>
   
   <entry>
-    <title>Java动态代理</title>
-    <link href="http://parallelworld.pw/2017/09/04/Java%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/"/>
-    <id>http://parallelworld.pw/2017/09/04/Java动态代理/</id>
-    <published>2017-09-04T07:01:54.000Z</published>
-    <updated>2017-09-06T08:42:16.610Z</updated>
-    
-    <content type="html"><![CDATA[<p>有了动态代理，对应的也就有静态代理。首先明确什么是代理。</p>
-<h2 id="代理"><a href="#代理" class="headerlink" title="代理"></a>代理</h2><p>代理，或者叫proxy，简单理解就是事情我不用去做，由其他人来替我完成。举例说明：赚钱方面，我就是我老婆的代理；带小孩方面，我老婆就是我的代理；家务方面，没有代理。</p>
-<p>放在计算机术语当中，就属于代理模式。为其他对象提供一种代理以控制对这个对象的访问。在某些情况下，一个客户不想或者不能直接引用另一个对象，而代理对象可以在客户端和目标对象之间起到中介的作用。</p>
-<h2 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ISubject</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Subject</span> <span class="keyword">implements</span> <span class="title">ISubject</span> </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        System.out.println(<span class="string">"call doSomething()"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ISubjectProxy</span> <span class="keyword">implements</span> <span class="title">ISubject</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Subject subject = <span class="keyword">new</span> Subject();</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> </span>&#123;</div><div class="line">        subject.doSomething();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        ISubject subject = <span class="keyword">new</span> ISubjectProxy();</div><div class="line">        subject.doSomething();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>此时ISubjectProxy就是对Subject的代理。这样做的好处是，可以对真实调用类进行封装，<strong>选择性的暴露接口</strong>，也可以<strong>对调用的过程进行监控</strong>。比如可以对所有第三方服务的调用都加上代理，对第三方服务进行调用前后的日志输出监控，以及其他参数（调用次数等）的监控。</p>
-<p>但是静态代理有个缺点，当代理的方法越来越多时，代理量也会增加。所以需要引入动态代理来解决此类问题。</p>
-<h2 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.lang.reflect.InvocationHandler;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"><span class="keyword">import</span> java.lang.reflect.Proxy;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProxyHandler</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> Object tar;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object o, Method method, Object[] objects)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">        Object result;</div><div class="line">        System.out.println(<span class="string">"call before"</span>);</div><div class="line">        result = method.invoke(tar, objects);</div><div class="line">        System.out.println(<span class="string">"call after"</span>);</div><div class="line">        <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">bind</span><span class="params">(Object tar)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.tar = tar;</div><div class="line">        <span class="keyword">return</span> Proxy.newProxyInstance(tar.getClass().getClassLoader(), tar.getClass().getInterfaces(), <span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        ProxyHandler proxy = <span class="keyword">new</span> ProxyHandler();</div><div class="line">        ISubject subject = (ISubject) proxy.bind(<span class="keyword">new</span> Subject());</div><div class="line">        subject.doSomething();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// output</div><div class="line">call before</div><div class="line">call doSomething()</div><div class="line">call after</div></pre></td></tr></table></figure>
-<p>动态代理的好处就是proxy类的代码量固定下来了，不会因为业务的增长而增长。可以实现AOP编程。</p>
-<p>但是无论是静态代理还是动态代理，它都需要一个接口。如果想要包装的方法不是接口，就没办法了。只能用CGLib动态代理了。</p>
-<h2 id="CGLib动态代理"><a href="#CGLib动态代理" class="headerlink" title="CGLib动态代理"></a>CGLib动态代理</h2><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>为什么java的动态代理只能对interface进行操作？</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
-<li><a href="http://www.360doc.com/content/14/0801/14/1073512_398598312.shtml" target="_blank" rel="external">http://www.360doc.com/content/14/0801/14/1073512_398598312.shtml</a></li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;有了动态代理，对应的也就有静态代理。首先明确什么是代理。&lt;/p&gt;
-&lt;h2 id=&quot;代理&quot;&gt;&lt;a href=&quot;#代理&quot; class=&quot;headerlink&quot; title=&quot;代理&quot;&gt;&lt;/a&gt;代理&lt;/h2&gt;&lt;p&gt;代理，或者叫proxy，简单理解就是事情我不用去做，由其他人来替我完
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>如何让 Cocoapods 不同版本共存</title>
     <link href="http://parallelworld.pw/2017/01/04/switch-version-of-cocoapods/"/>
     <id>http://parallelworld.pw/2017/01/04/switch-version-of-cocoapods/</id>
@@ -183,7 +150,7 @@
     <link href="http://parallelworld.pw/2016/12/30/how-to-build-my-personal-website/"/>
     <id>http://parallelworld.pw/2016/12/30/how-to-build-my-personal-website/</id>
     <published>2016-12-30T11:23:15.000Z</published>
-    <updated>2017-09-06T09:45:13.000Z</updated>
+    <updated>2017-09-06T09:53:05.000Z</updated>
     
     <content type="html"><![CDATA[<p>今天刚申请了个域名，就迫不及待的建了个人博客。下面是建立过程：</p>
 <h1 id="1-新建自己的-Github-Page"><a href="#1-新建自己的-Github-Page" class="headerlink" title="1. 新建自己的 Github Page"></a>1. 新建自己的 Github Page</h1><p>在自己的 Github 上新建一个 repository，取名<code>yourusername.github.io</code>。<code>README</code>和<code>gitignore</code>文件不用添加，所有选择默认即可。建好之后，是一个空的仓库，后面会用来保存生成的博客网页。</p>
