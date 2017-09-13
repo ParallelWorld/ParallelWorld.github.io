@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://parallelworld.pw/"/>
-  <updated>2017-09-13T09:13:21.000Z</updated>
+  <updated>2017-09-06T08:42:16.612Z</updated>
   <id>http://parallelworld.pw/</id>
   
   <author>
@@ -14,28 +14,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>tomcat源码分析---server.xml文件的加载和解析</title>
-    <link href="http://parallelworld.pw/2017/09/13/tomcat%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-server-xml%E6%96%87%E4%BB%B6%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%92%8C%E8%A7%A3%E6%9E%90/"/>
-    <id>http://parallelworld.pw/2017/09/13/tomcat源码分析-server-xml文件的加载和解析/</id>
-    <published>2017-09-13T09:04:18.000Z</published>
-    <updated>2017-09-13T09:13:21.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>server.xml对于tomcat来讲就是配置文件。搞清楚server.xml是如何加载的很有必要。</p>
-<p><img src="/images/haha@2x.png" alt=""></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;server.xml对于tomcat来讲就是配置文件。搞清楚server.xml是如何加载的很有必要。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/images/haha@2x.png&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
-
-    
-    </summary>
-    
-    
-  </entry>
   
   <entry>
     <title>浅谈ifelse</title>
