@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://parallelworld.pw/"/>
-  <updated>2017-09-06T08:42:16.612Z</updated>
+  <updated>2017-10-31T09:47:31.614Z</updated>
   <id>http://parallelworld.pw/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>浅谈ifelse</title>
+    <title>浅谈 ifelse</title>
     <link href="http://parallelworld.pw/2017/09/06/%E6%B5%85%E8%B0%88ifelse/"/>
     <id>http://parallelworld.pw/2017/09/06/浅谈ifelse/</id>
     <published>2017-09-06T07:38:25.000Z</published>
-    <updated>2017-09-06T08:42:16.612Z</updated>
+    <updated>2017-10-31T09:47:31.614Z</updated>
     
     <content type="html"><![CDATA[<p>同事发来他写的文章，<a href="https://mikefighting.github.io/2017/09/05/chat-if-else/" target="_blank" rel="external">此处是链接</a>。讲的是代码中<code>ifelse</code>的缺点，及改进方式。</p>
 <p>同事视<code>ifelse</code>为洪水猛兽，在我看来其实不然。<code>ifelse</code>是所有计算机高级语言的基本语法或者说基本词汇，有了基本词汇才能有丰富的表达啊。<code>ifelse</code>的作用是进行语句的判断，从而改变程序流程。从某种意义上讲，<code>ifelse</code>是一种查找过程。找到符合条件的判断语句，然后执行对应的大括号内的代码。</p>
