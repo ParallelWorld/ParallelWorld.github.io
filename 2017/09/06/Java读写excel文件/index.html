@@ -1,14 +1,242 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>Java读写excel文件 | 平行世界</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/7.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Java读写excel文件</h1><a id="logo" href="/.">平行世界</a><p class="description"></p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Java读写excel文件</h1><div class="post-meta">Sep 6, 2017</div><div class="post-content"><p>最近做了一个退款的需求，根据 XXX 提供的 userid，orderid，refundmoney 等数据调用相应的接口退款，数据给的形式不是 txt，而是 excel 表格的形式。之前没做过，在此记录下。</p>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Java读写excel文件 | 平行世界</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近做了一个退款的需求，根据 XXX 提供的 userid，orderid，refundmoney 等数据调用相应的接口退款，数据给的形式不是 txt，而是 excel 表格的形式。之前没做过，在此记录下。 选用的库是 Apache POI，提供对 excel 的读写功能的 java api。  HSSF：excel2003（.xls） XSSF：excel2007 及以后（.xlsx）  对应的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java读写excel文件">
+<meta property="og:url" content="http://parallelworld.pw/2017/09/06/Java读写excel文件/index.html">
+<meta property="og:site_name" content="平行世界">
+<meta property="og:description" content="最近做了一个退款的需求，根据 XXX 提供的 userid，orderid，refundmoney 等数据调用相应的接口退款，数据给的形式不是 txt，而是 excel 表格的形式。之前没做过，在此记录下。 选用的库是 Apache POI，提供对 excel 的读写功能的 java api。  HSSF：excel2003（.xls） XSSF：excel2007 及以后（.xlsx）  对应的">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-12-22T07:59:14.501Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java读写excel文件">
+<meta name="twitter:description" content="最近做了一个退款的需求，根据 XXX 提供的 userid，orderid，refundmoney 等数据调用相应的接口退款，数据给的形式不是 txt，而是 excel 表格的形式。之前没做过，在此记录下。 选用的库是 Apache POI，提供对 excel 的读写功能的 java api。  HSSF：excel2003（.xls） XSSF：excel2007 及以后（.xlsx）  对应的">
+  
+    <link rel="alternate" href="/atom.xml" title="平行世界" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">平行世界</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://parallelworld.pw"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Java读写excel文件" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/09/06/Java读写excel文件/" class="article-date">
+  <time datetime="2017-09-06T05:59:59.000Z" itemprop="datePublished">2017-09-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Java读写excel文件
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近做了一个退款的需求，根据 XXX 提供的 userid，orderid，refundmoney 等数据调用相应的接口退款，数据给的形式不是 txt，而是 excel 表格的形式。之前没做过，在此记录下。</p>
 <p>选用的库是 Apache POI，提供对 excel 的读写功能的 java api。</p>
 <ul>
 <li>HSSF：excel2003（.xls）</li>
 <li>XSSF：excel2007 及以后（.xlsx）</li>
 </ul>
 <p>对应的 maven 依赖是</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.apache.poi&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;poi&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;3.14&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div><div class="line">&lt;dependency&gt;</div><div class="line">    &lt;groupId&gt;org.apache.poi&lt;/groupId&gt;</div><div class="line">    &lt;artifactId&gt;poi-ooxml&lt;/artifactId&gt;</div><div class="line">    &lt;version&gt;3.14&lt;/version&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure>
-<h3 id="XLSReader"><a href="#XLSReader" class="headerlink" title="XLSReader"></a>XLSReader</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.apache.poi.hssf.usermodel.HSSFWorkbook;</div><div class="line"><span class="keyword">import</span> org.apache.poi.ss.usermodel.Row;</div><div class="line"><span class="keyword">import</span> org.apache.poi.ss.usermodel.Sheet;</div><div class="line"><span class="keyword">import</span> org.apache.poi.ss.usermodel.Workbook;</div><div class="line"><span class="keyword">import</span> org.apache.poi.xssf.usermodel.XSSFWorkbook;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.FileInputStream;</div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.util.ArrayList;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">XLSReader</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;List&gt; <span class="title">readExcel</span><span class="params">(String url, <span class="keyword">int</span> sheetIndex)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="comment">// 从xlsx/xls文件创建输入流</span></div><div class="line">        FileInputStream fis = <span class="keyword">new</span> FileInputStream(url);</div><div class="line">        List list = <span class="keyword">new</span> ArrayList();</div><div class="line"></div><div class="line">        <span class="comment">// 创建工作薄Workbook</span></div><div class="line">        Workbook wb = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (url.toLowerCase().endsWith(<span class="string">"xlsx"</span>)) &#123; <span class="comment">// 读取2007版，以.xlsx结尾</span></div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                wb = <span class="keyword">new</span> XSSFWorkbook(fis);</div><div class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (url.toLowerCase().endsWith(<span class="string">"xls"</span>)) &#123; <span class="comment">// 读取2003版，以.xls结尾</span></div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                wb = <span class="keyword">new</span> HSSFWorkbook(fis);</div><div class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        Sheet sheet = wb.getSheetAt(sheetIndex);</div><div class="line">        Row row;</div><div class="line">        String cell;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = sheet.getFirstRowNum(); i &lt; sheet.getPhysicalNumberOfRows(); i++) &#123;</div><div class="line">            <span class="comment">// 循环行数</span></div><div class="line">            row = sheet.getRow(i);</div><div class="line">            List cells = <span class="keyword">new</span> ArrayList();</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = row.getFirstCellNum(); j &lt; row.getPhysicalNumberOfCells(); j++) &#123;</div><div class="line">                <span class="comment">// 循环列数</span></div><div class="line">                cell = row.getCell(j).toString();</div><div class="line">                cells.add(cell);</div><div class="line">            &#125;</div><div class="line">            list.add(cells);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> list;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="XLSWriter"><a href="#XLSWriter" class="headerlink" title="XLSWriter"></a>XLSWriter</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.apache.poi.xssf.usermodel.*;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.FileOutputStream;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">XLSWriter</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">writeToExcel</span><span class="params">(List&lt;List&gt; list, String url)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="comment">// 创建工作薄</span></div><div class="line">        XSSFWorkbook workBook = <span class="keyword">new</span> XSSFWorkbook();</div><div class="line">        <span class="comment">// 在工作薄中创建一工作表</span></div><div class="line">        XSSFSheet sheet = workBook.createSheet();</div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> rowIndex = <span class="number">0</span>; rowIndex &lt; list.size(); rowIndex++) &#123;</div><div class="line">            <span class="comment">// 在指定的索引处创建一行</span></div><div class="line">            XSSFRow row = sheet.createRow(rowIndex);</div><div class="line">            List cells = list.get(rowIndex);</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> cellIndex = <span class="number">0</span>; cellIndex &lt; cells.size(); cellIndex++) &#123;</div><div class="line">                <span class="comment">// 在指定的索引处创建一列（单元格）</span></div><div class="line">                XSSFCell code = row.createCell(cellIndex);</div><div class="line">                <span class="comment">// 定义单元格为字符串类型</span></div><div class="line">                code.setCellType(XSSFCell.CELL_TYPE_STRING);</div><div class="line">                <span class="comment">// 输入cell内容</span></div><div class="line">                code.setCellValue(cells.get(cellIndex).toString());</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// 新建输出流并把相应的excel文件存盘</span></div><div class="line">        FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(url);</div><div class="line">        workBook.write(fos);</div><div class="line">        fos.flush();</div><div class="line">        <span class="comment">//操作结束，关闭流</span></div><div class="line">        fos.close();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.poi&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;poi&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.14&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.poi&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;poi-ooxml&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.14&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="XLSReader"><a href="#XLSReader" class="headerlink" title="XLSReader"></a>XLSReader</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.poi.hssf.usermodel.HSSFWorkbook;</span><br><span class="line"><span class="keyword">import</span> org.apache.poi.ss.usermodel.Row;</span><br><span class="line"><span class="keyword">import</span> org.apache.poi.ss.usermodel.Sheet;</span><br><span class="line"><span class="keyword">import</span> org.apache.poi.ss.usermodel.Workbook;</span><br><span class="line"><span class="keyword">import</span> org.apache.poi.xssf.usermodel.XSSFWorkbook;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">XLSReader</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;List&gt; <span class="title">readExcel</span><span class="params">(String url, <span class="keyword">int</span> sheetIndex)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// 从xlsx/xls文件创建输入流</span></span><br><span class="line">        FileInputStream fis = <span class="keyword">new</span> FileInputStream(url);</span><br><span class="line">        List list = <span class="keyword">new</span> ArrayList();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建工作薄Workbook</span></span><br><span class="line">        Workbook wb = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (url.toLowerCase().endsWith(<span class="string">"xlsx"</span>)) &#123; <span class="comment">// 读取2007版，以.xlsx结尾</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                wb = <span class="keyword">new</span> XSSFWorkbook(fis);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (url.toLowerCase().endsWith(<span class="string">"xls"</span>)) &#123; <span class="comment">// 读取2003版，以.xls结尾</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                wb = <span class="keyword">new</span> HSSFWorkbook(fis);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Sheet sheet = wb.getSheetAt(sheetIndex);</span><br><span class="line">        Row row;</span><br><span class="line">        String cell;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = sheet.getFirstRowNum(); i &lt; sheet.getPhysicalNumberOfRows(); i++) &#123;</span><br><span class="line">            <span class="comment">// 循环行数</span></span><br><span class="line">            row = sheet.getRow(i);</span><br><span class="line">            List cells = <span class="keyword">new</span> ArrayList();</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = row.getFirstCellNum(); j &lt; row.getPhysicalNumberOfCells(); j++) &#123;</span><br><span class="line">                <span class="comment">// 循环列数</span></span><br><span class="line">                cell = row.getCell(j).toString();</span><br><span class="line">                cells.add(cell);</span><br><span class="line">            &#125;</span><br><span class="line">            list.add(cells);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="XLSWriter"><a href="#XLSWriter" class="headerlink" title="XLSWriter"></a>XLSWriter</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.poi.xssf.usermodel.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">XLSWriter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">writeToExcel</span><span class="params">(List&lt;List&gt; list, String url)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">// 创建工作薄</span></span><br><span class="line">        XSSFWorkbook workBook = <span class="keyword">new</span> XSSFWorkbook();</span><br><span class="line">        <span class="comment">// 在工作薄中创建一工作表</span></span><br><span class="line">        XSSFSheet sheet = workBook.createSheet();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> rowIndex = <span class="number">0</span>; rowIndex &lt; list.size(); rowIndex++) &#123;</span><br><span class="line">            <span class="comment">// 在指定的索引处创建一行</span></span><br><span class="line">            XSSFRow row = sheet.createRow(rowIndex);</span><br><span class="line">            List cells = list.get(rowIndex);</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> cellIndex = <span class="number">0</span>; cellIndex &lt; cells.size(); cellIndex++) &#123;</span><br><span class="line">                <span class="comment">// 在指定的索引处创建一列（单元格）</span></span><br><span class="line">                XSSFCell code = row.createCell(cellIndex);</span><br><span class="line">                <span class="comment">// 定义单元格为字符串类型</span></span><br><span class="line">                code.setCellType(XSSFCell.CELL_TYPE_STRING);</span><br><span class="line">                <span class="comment">// 输入cell内容</span></span><br><span class="line">                code.setCellValue(cells.get(cellIndex).toString());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 新建输出流并把相应的excel文件存盘</span></span><br><span class="line">        FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(url);</span><br><span class="line">        workBook.write(fos);</span><br><span class="line">        fos.flush();</span><br><span class="line">        <span class="comment">//操作结束，关闭流</span></span><br><span class="line">        fos.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ul>
-<li><a href="http://zhoushijie5230.iteye.com/blog/2114964" target="_blank" rel="external">http://zhoushijie5230.iteye.com/blog/2114964</a></li>
+<li><a href="http://zhoushijie5230.iteye.com/blog/2114964" target="_blank" rel="noopener">http://zhoushijie5230.iteye.com/blog/2114964</a></li>
 </ul>
-</div><div class="tags"></div><div class="post-nav"><a href="/2017/09/06/浅谈ifelse/" class="pre">浅谈 ifelse</a><a href="/2017/01/04/switch-version-of-cocoapods/" class="next">如何让 Cocoapods 不同版本共存</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://parallelworld.pw"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/tomcat/">tomcat</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/blog/" style="font-size: 15px;">blog</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/12/28/hexo-tips/">hexo-tips</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/27/mac下端口被占用/">mac下端口被占用</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/25/tomcat源码分析-2-整体架构/">tomcat源码分析-2-整体架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/25/tomcat源码分析-1-准备工作/">tomcat源码分析-1-准备工作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/22/tomcat源码分析-0-开篇/">tomcat源码分析-0-开篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/20/json转map精度丢失/">json转map精度丢失</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/06/浅谈ifelse/">浅谈 ifelse</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/06/Java读写excel文件/">Java读写excel文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/01/04/switch-version-of-cocoapods/">如何让 Cocoapods 不同版本共存</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/12/30/how-to-build-my-personal-website/">搭建博客（Github+Hexo+文章管理）</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://mikefighting.github.io" title="击水湘江" target="_blank">击水湘江</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2017 <a href="/." rel="nofollow">平行世界.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/fancybox/3.1.20/jquery.fancybox.min.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://parallelworld.pw/2017/09/06/Java读写excel文件/" data-id="cjbq38n6g0003oa6s4f23uxow" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/09/06/浅谈ifelse/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          浅谈 ifelse
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/01/04/switch-version-of-cocoapods/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">如何让 Cocoapods 不同版本共存</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/shell/">shell</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/tomcat/">tomcat</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/工具/">工具</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/blog/">blog</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/blog/" style="font-size: 10px;">blog</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/12/28/hexo-tips/">hexo-tips</a>
+          </li>
+        
+          <li>
+            <a href="/2017/12/27/mac下端口被占用/">mac下端口被占用</a>
+          </li>
+        
+          <li>
+            <a href="/2017/12/25/tomcat源码分析-2-整体架构/">tomcat源码分析-2-整体架构</a>
+          </li>
+        
+          <li>
+            <a href="/2017/12/25/tomcat源码分析-1-准备工作/">tomcat源码分析-1-准备工作</a>
+          </li>
+        
+          <li>
+            <a href="/2017/12/22/tomcat源码分析-0-开篇/">tomcat源码分析-0-开篇</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Parallel World<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
