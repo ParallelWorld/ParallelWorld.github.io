@@ -62,6 +62,101 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-命令行快速打开idea工程" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/22/命令行快速打开idea工程/" class="article-date">
+  <time datetime="2018-01-22T09:20:07.000Z" itemprop="datePublished">2018-01-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/工具/">工具</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/22/命令行快速打开idea工程/">命令行快速打开idea工程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>每次用 idea 打开 java 工程时，都要手动选择路径，特别麻烦。如果能在命令行中，<code>cd</code>到工程目录下，直接打开就好了。可惜 idea 本身并不提供这样的命令行工具，所以还是用脚本执行吧。</p>
+</blockquote>
+<p>在目录<code>~/.myscripts</code>中新建脚本文件<code>openIdea.sh</code>，内容如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/sh</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> check for where the latest version of IDEA is installed</span><br><span class="line">IDEA=`ls -1d /Applications/IntelliJ\ * | tail -n1`</span><br><span class="line">wd=`pwd`</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> were we given a directory?</span><br><span class="line">if [ -d "$1" ]; then</span><br><span class="line"><span class="meta">#</span>  echo "checking for things in the working dir given"</span><br><span class="line">  wd=`ls -1d "$1" | head -n1`</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> were we given a file?</span><br><span class="line">if [ -f "$1" ]; then</span><br><span class="line"><span class="meta">#</span>  echo "opening '$1'"</span><br><span class="line">  open -a "$IDEA" "$1"</span><br><span class="line">else</span><br><span class="line">    # let's check for stuff in our working directory.</span><br><span class="line">    pushd $wd &gt; /dev/null</span><br><span class="line"></span><br><span class="line">    # does our working dir have an .idea directory?</span><br><span class="line">    if [ -d ".idea" ]; then</span><br><span class="line"><span class="meta">#</span>      echo "opening via the .idea dir"</span><br><span class="line">      open -a "$IDEA" .</span><br><span class="line"></span><br><span class="line">    # is there an IDEA project file?</span><br><span class="line">    elif [ -f *.ipr ]; then</span><br><span class="line"><span class="meta">#</span>      echo "opening via the project file"</span><br><span class="line">      open -a "$IDEA" `ls -1d *.ipr | head -n1`</span><br><span class="line"></span><br><span class="line">    # Is there a pom.xml?</span><br><span class="line">    elif [ -f pom.xml ]; then</span><br><span class="line"><span class="meta">#</span>      echo "importing from pom"</span><br><span class="line">      open -a "$IDEA" "pom.xml"</span><br><span class="line"></span><br><span class="line">    # can't do anything smart; just open IDEA</span><br><span class="line">    else</span><br><span class="line"><span class="meta">#</span>      echo 'cbf'</span><br><span class="line">      open "$IDEA"</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    popd &gt; /dev/null</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>命令行执行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 ~/.myscripts/openIdea.sh</span><br><span class="line">echo "alias idea='sh ~/.myscripts/openIdea.sh'" &gt;&gt; ~/.profile</span><br><span class="line">source ~/.profile</span><br></pre></td></tr></table></figure>
+<h1 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h1><p><code>cd</code>到工程目录下，命令行执行<code>idea</code>即可。或者命令行直接执行<code>idea XXX</code>，<code>XXX</code>是项目路径。</p>
+<h1 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h1><ul>
+<li><a href="https://luyiisme.github.io/2017/04/12/idea-open-project/" target="_blank" rel="noopener">https://luyiisme.github.io/2017/04/12/idea-open-project/</a></li>
+<li><a href="https://gist.github.com/chrisdarroch/7018927" target="_blank" rel="noopener">https://gist.github.com/chrisdarroch/7018927</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://parallelworld.pw/2018/01/22/命令行快速打开idea工程/" data-id="cjcr17d9k000hm76sk4yon9u9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-tomcat-源码分析-3-HTTP 协议解析" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/01/04/tomcat-源码分析-3-HTTP 协议解析/" class="article-date">
+  <time datetime="2018-01-04T03:01:14.000Z" itemprop="datePublished">2018-01-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/tomcat/">tomcat</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/01/04/tomcat-源码分析-3-HTTP 协议解析/">tomcat-源码分析-3-HTTP 协议解析</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Http11Protocol.Http11ConnectionHandler</p>
+<p>AbstractProtocol process 方法<br>Http11Processor—processor</p>
+<p>AbstractHttp11Processor—process</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://parallelworld.pw/2018/01/04/tomcat-源码分析-3-HTTP 协议解析/" data-id="cjcr17d9d000cm76sj5s2r0lg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-hexo-tips" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2017/12/28/hexo-tips/" class="article-date">
@@ -90,7 +185,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://parallelworld.pw/2017/12/28/hexo-tips/" data-id="cjbqas5ce0004w96s4iyuxjs1" class="article-share-link">Share</a>
+      <a data-url="http://parallelworld.pw/2017/12/28/hexo-tips/" data-id="cjcr17d900004m76sc87nqe3e" class="article-share-link">Share</a>
       
       
     </footer>
@@ -136,7 +231,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://parallelworld.pw/2017/12/27/mac下端口被占用/" data-id="cjbqas5ch0007w96s1s84aqte" class="article-share-link">Share</a>
+      <a data-url="http://parallelworld.pw/2017/12/27/mac下端口被占用/" data-id="cjcr17d920005m76swpswmlhk" class="article-share-link">Share</a>
       
       
     </footer>
@@ -146,9 +241,9 @@
 
 
   
-    <article id="post-tomcat源码分析-2-整体架构" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-tomcat-源码分析-2-整体架构" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/12/25/tomcat源码分析-2-整体架构/" class="article-date">
+    <a href="/2017/12/25/tomcat-源码分析-2-整体架构/" class="article-date">
   <time datetime="2017-12-25T03:21:15.000Z" itemprop="datePublished">2017-12-25</time>
 </a>
     
@@ -160,7 +255,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/25/tomcat源码分析-2-整体架构/">tomcat源码分析-2-整体架构</a>
+      <a class="article-title" href="/2017/12/25/tomcat-源码分析-2-整体架构/">tomcat源码分析-2-整体架构</a>
     </h1>
   
 
@@ -169,12 +264,12 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="总体架构"><a href="#总体架构" class="headerlink" title="总体架构"></a>总体架构</h1><p>tomcat 是 servlet 容器，提供 servlet 运行的环境。整体架构图如下：</p>
-<img src="/2017/12/25/tomcat源码分析-2-整体架构/tomcat-架构图.bmp">
+
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://parallelworld.pw/2017/12/25/tomcat源码分析-2-整体架构/" data-id="cjbqas5cs000fw96srg7xji21" class="article-share-link">Share</a>
+      <a data-url="http://parallelworld.pw/2017/12/25/tomcat-源码分析-2-整体架构/" data-id="cjcr17d9c000am76s5i9y4xhw" class="article-share-link">Share</a>
       
       
     </footer>
@@ -184,9 +279,9 @@
 
 
   
-    <article id="post-tomcat源码分析-1-准备工作" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-tomcat-源码分析-1-准备工作" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/12/25/tomcat源码分析-1-准备工作/" class="article-date">
+    <a href="/2017/12/25/tomcat-源码分析-1-准备工作/" class="article-date">
   <time datetime="2017-12-25T03:01:14.000Z" itemprop="datePublished">2017-12-25</time>
 </a>
     
@@ -202,7 +297,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/25/tomcat源码分析-1-准备工作/">tomcat源码分析-1-准备工作</a>
+      <a class="article-title" href="/2017/12/25/tomcat-源码分析-1-准备工作/">tomcat源码分析-1-准备工作</a>
     </h1>
   
 
@@ -220,13 +315,13 @@
 <li>修改 pom 文件，见下文。</li>
 <li>再运行，发现还是有错。观察发现，需要设置 vm 启动参数。</li>
 </ol>
-<img src="/2017/12/25/tomcat源码分析-1-准备工作/tomcat-1-vm1.png">
-<img src="/2017/12/25/tomcat源码分析-1-准备工作/tomcat-1-vm2.png">
+
+
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-Dcatalina.home=target/classes/</span><br><span class="line">-Dcatalina.base=target/classes/</span><br><span class="line">-Djava.endorsed.dirs=$&#123;catalina.base&#125;endorsed</span><br><span class="line">-Djava.io.tmpdir=$&#123;catalina.base&#125;temp</span><br><span class="line">-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager</span><br><span class="line">-Djava.util.logging.config.file=$&#123;catalina.base&#125;conf/logging.properties</span><br></pre></td></tr></table></figure>
 <p>如果觉得这样下载源码再配置很麻烦，可以直接到<a href="https://github.com/ParallelWorld/Tomcat7_0_42-maven" target="_blank" rel="noopener">Tomcat7_0_42-maven</a>clone 项目源码，按照 README 操作即可。</p>
 <p>我们启动<code>Bootstrap</code>的<code>main</code>函数，控制台显示如下信息即为成功：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Dec 27, 2017 5:25:53 PM org.apache.coyote.AbstractProtocol start</span><br><span class="line">INFO: Starting ProtocolHandler [&quot;http-bio-8080&quot;]</span><br><span class="line">Dec 27, 2017 5:25:53 PM org.apache.coyote.AbstractProtocol start</span><br><span class="line">INFO: Starting ProtocolHandler [&quot;ajp-bio-8009&quot;]</span><br><span class="line">Dec 27, 2017 5:25:53 PM org.apache.catalina.startup.Catalina start</span><br><span class="line">INFO: Server startup in 2023 ms</span><br></pre></td></tr></table></figure>
-<p>浏览器输入<code>http://localhost:8080/</code>，可以看到那只经典的猫。<br><img src="/2017/12/25/tomcat源码分析-1-准备工作/tomcat.png"></p>
+<p>浏览器输入<code>http://localhost:8080/</code>，可以看到那只经典的猫。<br></p>
 <h1 id="code"><a href="#code" class="headerlink" title="code"></a>code</h1><p>pom.xml</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>pw.parallelworld<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat7<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.ant<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>ant<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.9.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.xml.rpc<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.xml.rpc-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>wsdl4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>wsdl4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.6.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.eclipse.jdt.core.compiler<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>ecj<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.2.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">finalName</span>&gt;</span>Tomcat<span class="tag">&lt;/<span class="name">finalName</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/java<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">includes</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.xml<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.dtd<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.properties<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.xsd<span class="tag">&lt;/<span class="name">include</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">includes</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.5.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">encoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">encoding</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.6<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.6<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <h1 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h1><ul>
@@ -237,7 +332,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://parallelworld.pw/2017/12/25/tomcat源码分析-1-准备工作/" data-id="cjbqas5cq000cw96s4wd9vxue" class="article-share-link">Share</a>
+      <a data-url="http://parallelworld.pw/2017/12/25/tomcat-源码分析-1-准备工作/" data-id="cjcr17d990009m76sjm7srvxp" class="article-share-link">Share</a>
       
       
     </footer>
@@ -247,9 +342,9 @@
 
 
   
-    <article id="post-tomcat源码分析-0-开篇" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-tomcat-源码分析-0-开篇" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/12/22/tomcat源码分析-0-开篇/" class="article-date">
+    <a href="/2017/12/22/tomcat-源码分析-0-开篇/" class="article-date">
   <time datetime="2017-12-22T08:01:14.000Z" itemprop="datePublished">2017-12-22</time>
 </a>
     
@@ -265,7 +360,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/22/tomcat源码分析-0-开篇/">tomcat源码分析-0-开篇</a>
+      <a class="article-title" href="/2017/12/22/tomcat-源码分析-0-开篇/">tomcat源码分析-0-开篇</a>
     </h1>
   
 
@@ -273,7 +368,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="什么是-tomcat"><a href="#什么是-tomcat" class="headerlink" title="什么是 tomcat"></a>什么是 tomcat</h1><p><a href="https://zh.wikipedia.org/wiki/Apache_Tomcat" target="_blank" rel="noopener">tomcat 中文 wiki</a>。总的来说，tomcat 是一个支持 <strong>servlet 标准</strong> 的 <strong>web 容器</strong>。</p>
+        <h1 id="什么是-tomcat"><a href="#什么是-tomcat" class="headerlink" title="什么是 tomcat"></a>什么是 tomcat</h1><p><a href="https://zh.wikipedia.org/wiki/Apache_Tomcat" target="_blank" rel="noopener">tomcat 中文 wiki</a>。总的来说，tomcat 是一个支持 <strong>servlet 标准</strong> 的 <strong>web 容器</strong>。附上<a href="http://tomcat.apache.org/" target="_blank" rel="noopener">官网地址</a>。</p>
 <h1 id="什么是容器"><a href="#什么是容器" class="headerlink" title="什么是容器"></a>什么是容器</h1><p>容器又名 container，为其内需要管理的对象的正常运行提供各种支持，包括但不限于生命周期、运行时机、资源分配、安全管理等。</p>
 <p>当 web 服务器拿到一个请求时，不是直接交给 servlet 处理，而是先交给 web 容器。web 容器来决定如何处理该请求，相当于 web 请求的大管家。</p>
 <p>tomcat 提供以下支持：</p>
@@ -288,8 +383,8 @@
 <h1 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h1><p>综上简单介绍了下 tomcat，接下来分阶段剖析 tomcat 源码。</p>
 <p>以下是文章链接：</p>
 <ul>
-<li><a href="/2017/12/25/tomcat源码分析-1-准备工作/" title="tomcat源码分析-1-准备工作">tomcat源码分析-1-准备工作</a></li>
-<li><a href="/2017/12/25/tomcat源码分析-2-整体架构/" title="tomcat源码分析-2-整体架构">tomcat源码分析-2-整体架构</a></li>
+<li><a href="/2017/12/25/tomcat-源码分析-1-准备工作/" title="tomcat源码分析-1-准备工作">tomcat源码分析-1-准备工作</a></li>
+<li><a href="/2017/12/25/tomcat-源码分析-2-整体架构/" title="tomcat源码分析-2-整体架构">tomcat源码分析-2-整体架构</a></li>
 <li></li>
 <li>
 </li>
@@ -302,7 +397,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://parallelworld.pw/2017/12/22/tomcat源码分析-0-开篇/" data-id="cjbqas5cn000aw96snbqxphlg" class="article-share-link">Share</a>
+      <a data-url="http://parallelworld.pw/2017/12/22/tomcat-源码分析-0-开篇/" data-id="cjcr17d970008m76sidh62isz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -350,7 +445,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://parallelworld.pw/2017/11/20/json转map精度丢失/" data-id="cjbqas5cf0005w96sej27j9qx" class="article-share-link">Share</a>
+      <a data-url="http://parallelworld.pw/2017/11/20/json转map精度丢失/" data-id="cjcr17d9f000dm76s0xfifa5x" class="article-share-link">Share</a>
       
       
     </footer>
@@ -393,7 +488,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://parallelworld.pw/2017/09/06/浅谈ifelse/" data-id="cjbqas5cu000gw96srn1x8802" class="article-share-link">Share</a>
+      <a data-url="http://parallelworld.pw/2017/09/06/浅谈ifelse/" data-id="cjcr17d9n000lm76s6c75hjk1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -442,7 +537,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://parallelworld.pw/2017/09/06/Java读写excel文件/" data-id="cjbqas5cb0002w96sligwsc36" class="article-share-link">Share</a>
+      <a data-url="http://parallelworld.pw/2017/09/06/Java读写excel文件/" data-id="cjcr17d8p0000m76splb6mx5i" class="article-share-link">Share</a>
       
       
     </footer>
@@ -452,164 +547,11 @@
 
 
   
-    <article id="post-switch-version-of-cocoapods" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2017/01/04/switch-version-of-cocoapods/" class="article-date">
-  <time datetime="2017-01-04T02:24:15.000Z" itemprop="datePublished">2017-01-04</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/工具/">工具</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/01/04/switch-version-of-cocoapods/">如何让 Cocoapods 不同版本共存</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>公司目前用的 cocoapods 版本是 0.35，而平时自己研究别人源码用的都是 1.0 以上的版本。如果同时安装两个版本，再使用 <code>pod</code> 命令时，总是产生冲突，容易出错。此时两个版本的 cocoapods 会安装在同一个环境下，所以考虑如何让两个版本的 ，甚至多个版本的 cocoapods 安装在不同的环境下，那么版本共存和切换就有了可能性。</p>
-<h1 id="渔"><a href="#渔" class="headerlink" title="渔"></a>渔</h1><p>首先我们从 cocoapods 是如何安装的入手分析。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gem install cocoapods</span><br></pre></td></tr></table></figure>
-<p>这段代码是最基本的安装命令，执行后会安装最新的 cocoapods 版本。注意到，用的是 gem 命令，gem 又是个啥呢？</p>
-<h2 id="gem"><a href="#gem" class="headerlink" title="gem"></a>gem</h2><p><strong>gem 是封装起来的 Ruby 应用程序或代码库，终端使用的 gem 命令，是指通过 RubyGems 管理 Gem 包。也就是说 cocoapods 是一个 Ruby 代码包，用 gem 来安装。</strong></p>
-<p>如果有个管理工具，可以安装和管理多个 Ruby 环境，在每个 Ruby 环境中，用 gem 安装 cocoapods，不就实现了不同版本的 cocoapods 共存了吗？ruby 刚好有个版本管理工具，可以做到这一点。</p>
-<h2 id="RVM"><a href="#RVM" class="headerlink" title="RVM"></a>RVM</h2><p><strong>RVM 用于帮助你安装 Ruby 环境，帮你管理多个 Ruby 环境，帮你管理你开发的每个 Ruby 应用使用机器上哪个 Ruby 环境。</strong></p>
-<p>总结下来就是，使用 RVM 安装不同版本的 Ruby 环境，在每个环境中安装 cocoapods，此时每个 Ruby 环境中的 cocoapods 可以不同。</p>
-<p>渔完了，接下来是鱼。</p>
-<h1 id="鱼"><a href="#鱼" class="headerlink" title="鱼"></a>鱼</h1><p>需要 cocoapods 版本切换的你，肯定在机子上已经安装好了某个版本的 cocoapods，为了避免引起冲突，先把机器上的 cocoapods 卸载干净。</p>
-<h2 id="卸载当前机器上的-cocoapods"><a href="#卸载当前机器上的-cocoapods" class="headerlink" title="卸载当前机器上的 cocoapods"></a>卸载当前机器上的 cocoapods</h2><ol>
-<li>终端输入 <code>gem list</code> ，查看当前 gem 下安装的所有包</li>
-<li>输入命令 <code>sudo gem uninstall XXX</code> ，XXX 是你要卸载的包名</li>
-<li>卸载步骤 1 中所有 cocoapods 开头的包</li>
-<li>反复执行前面几步，直到所有的 cocoapods 开头的包都已经被卸载了</li>
-</ol>
-<h2 id="安装-rvm-和多个版本的-Ruby"><a href="#安装-rvm-和多个版本的-Ruby" class="headerlink" title="安装 rvm 和多个版本的 Ruby"></a>安装 rvm 和多个版本的 Ruby</h2><ol>
-<li>安装 rvm，使用命令 <code>curl -L get.rvm.io | bash -s stable &amp;&amp; source ~/.rvm/scripts/rvm</code></li>
-<li>到 <a href="">https://rvm.io/binaries</a> 下载相应版本的 ruby 包</li>
-<li>执行 <code>rvm mount ~/Downloads/ruby-2.2.3.tar.bz2</code> ，其中 ruby-2.2.3.tar.bz2 是你下载好的 ruby 包，按自己的需求可以多安装几个版本</li>
-<li>执行 <code>rvm list</code> 可查看当前安装的 ruby 版本列表，执行 <code>rvm use &lt;Version&gt;</code> 可切换到不同版本的 ruby</li>
-<li>在某个 ruby 版本下，安装指定版本的 cocoapods，参见下面内容</li>
-</ol>
-<h2 id="如何正确的安装-cocoapods"><a href="#如何正确的安装-cocoapods" class="headerlink" title="如何正确的安装 cocoapods"></a>如何正确的安装 cocoapods</h2><p>如果你是 mac 的 10.11 及以上系统，需要使用命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gem install cocoapods -v &lt;Version&gt; -n /usr/local/bin</span><br></pre></td></tr></table></figure>
-<p>否则的话使用命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gem install cocoapods -v &lt;Version&gt;</span><br></pre></td></tr></table></figure>
-<h2 id="我安装的版本对应表"><a href="#我安装的版本对应表" class="headerlink" title="我安装的版本对应表"></a>我安装的版本对应表</h2><p>由于 ruby 版本不同，可安装的 cocoapods 版本也就不同，下面是我已经验证可行的版本对应关系。</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">ruby version</th>
-<th style="text-align:center">cocoapods version</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">2.1.0</td>
-<td style="text-align:center">0.35</td>
-</tr>
-<tr>
-<td style="text-align:center">2.2.0</td>
-<td style="text-align:center">0.39</td>
-</tr>
-<tr>
-<td style="text-align:center">2.2.3</td>
-<td style="text-align:center">1.0.1</td>
-</tr>
-</tbody>
-</table>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ul>
-<li><a href="">https://henter.me/post/ruby-rvm-gem-rake-bundle-rails.html</a></li>
-<li><a href="">http://manongs.com/a/GQOrmm</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://parallelworld.pw/2017/01/04/switch-version-of-cocoapods/" data-id="cjbqas5cp000bw96sx7w3vuzd" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
 
 
-  
-    <article id="post-how-to-build-my-personal-website" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/12/30/how-to-build-my-personal-website/" class="article-date">
-  <time datetime="2016-12-30T11:23:15.000Z" itemprop="datePublished">2016-12-30</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/工具/">工具</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/12/30/how-to-build-my-personal-website/">搭建博客（Github+Hexo+文章管理）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>今天刚申请了个域名，就迫不及待的建了个人博客。下面是建立过程：</p>
-<h1 id="1-新建自己的-Github-Page"><a href="#1-新建自己的-Github-Page" class="headerlink" title="1. 新建自己的 Github Page"></a>1. 新建自己的 Github Page</h1><p>在自己的 Github 上新建一个 repository，取名<code>yourusername.github.io</code>。<code>README</code>和<code>gitignore</code>文件不用添加，所有选择默认即可。建好之后，是一个空的仓库，后面会用来保存生成的博客网页。</p>
-<h1 id="2-安装-Hexo"><a href="#2-安装-Hexo" class="headerlink" title="2. 安装 Hexo"></a>2. 安装 Hexo</h1><p>由于 Hexo 这个博客框架更新很快，网上的很多相关博客其实都已经过时，所以还是参考<a href="https://hexo.io/zh-cn/" target="_blank" rel="noopener"> Hexo 官网</a>的教程为准。</p>
-<p>主要命令如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br><span class="line">hexo init blog</span><br><span class="line">cd blog</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
-<p>除此之外，还需要修改<code>blog</code>文件夹下的<code>_config.yml</code>配置文件，关联之前创建的仓库。命令如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 修改前</span><br><span class="line"># Deployment</span><br><span class="line">## Docs: https://hexo.io/docs/deployment.html</span><br><span class="line">deploy:</span><br><span class="line">  type:</span><br><span class="line"></span><br><span class="line">// 修改后</span><br><span class="line"># Deployment</span><br><span class="line">## Docs: https://hexo.io/docs/deployment.html</span><br><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: https://github.com/yourusername/yourusername.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
-<p><code>type</code>、<code>repo</code>和<code>branch</code>之前一定要有两个空格，否则会报错。</p>
-<p>为了能够识别<code>git</code>，还需要安装<code>hexo-deployer-git</code>包，命令如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-<p>到此就可以本地写博客，并且可以发布到<code>https://github.com/yourusername/yourusername.github.io</code>网页上了。</p>
-<h1 id="3-博客文章管理"><a href="#3-博客文章管理" class="headerlink" title="3. 博客文章管理"></a>3. 博客文章管理</h1><p>除了上班的闲暇时间写写东西外，回家的时候可能也会写点，这时候就遇到了文章的同步问题。既然 Hexo 生成的博客网页可以存放在 github 上，那博客的文章为什么不能呢？所以新建一个仓库，取名<code>blog</code>，专门用来存放博客的源文件。</p>
-<p>但是有个问题，就是有些文件是我们在生成博客网页的时候自动生成的。这些其实没有必要同步，而且每次都会重新生成，容易引起冲突。所以我们需要添加一个<code>.gitignore</code>文件，内容如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.DS_Store</span><br><span class="line">Thumbs.db</span><br><span class="line">db.json</span><br><span class="line">*.log</span><br><span class="line">node_modules/</span><br><span class="line">public/</span><br><span class="line">.deploy*/</span><br></pre></td></tr></table></figure>
-<p>当在新机器上写博客时，只需要把源文件 clone 下来，输入命令<code>npm install</code>即可。</p>
-<h1 id="4-安装-maupassant-主题"><a href="#4-安装-maupassant-主题" class="headerlink" title="4. 安装 maupassant 主题"></a>4. 安装 maupassant 主题</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">cd blog</span><br><span class="line">git clone https://github.com/tufu9441/maupassant-hexo.git themes/maupassant</span><br><span class="line">npm install hexo-renderer-jade --save</span><br><span class="line">npm install -g cnpm --registry=https://registry.npm.taobao.org  # 使用taobao源的cnpm代替官方的npm</span><br><span class="line">cnpm install hexo-renderer-sass --save   # 安装hexo-renderer-sass插件</span><br><span class="line"><span class="meta">#</span> 修改blog目录下，而不是主题目录下的_config.yml</span><br><span class="line">theme: landscape-&gt;theme: maupassant</span><br><span class="line"></span><br><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ul>
-<li><a href="http://www.jianshu.com/p/834d7cc0668d" target="_blank" rel="noopener">http://www.jianshu.com/p/834d7cc0668d</a></li>
-<li><a href="https://hexo.io/zh-cn" target="_blank" rel="noopener">https://hexo.io/zh-cn</a></li>
-<li><a href="https://hexo.io/zh-cn/docs/deployment.html" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/deployment.html</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://parallelworld.pw/2016/12/30/how-to-build-my-personal-website/" data-id="cjbqas5cg0006w96s3cs9k707" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/blog/">blog</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
+  <nav id="page-nav">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">__('next') &raquo;</a>
+  </nav>
 </section>
         
           <aside id="sidebar">
@@ -647,7 +589,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li></ul>
     </div>
   </div>
 
@@ -660,6 +602,14 @@
       <ul>
         
           <li>
+            <a href="/2018/01/22/命令行快速打开idea工程/">命令行快速打开idea工程</a>
+          </li>
+        
+          <li>
+            <a href="/2018/01/04/tomcat-源码分析-3-HTTP 协议解析/">tomcat-源码分析-3-HTTP 协议解析</a>
+          </li>
+        
+          <li>
             <a href="/2017/12/28/hexo-tips/">hexo-tips</a>
           </li>
         
@@ -668,15 +618,7 @@
           </li>
         
           <li>
-            <a href="/2017/12/25/tomcat源码分析-2-整体架构/">tomcat源码分析-2-整体架构</a>
-          </li>
-        
-          <li>
-            <a href="/2017/12/25/tomcat源码分析-1-准备工作/">tomcat源码分析-1-准备工作</a>
-          </li>
-        
-          <li>
-            <a href="/2017/12/22/tomcat源码分析-0-开篇/">tomcat源码分析-0-开篇</a>
+            <a href="/2017/12/25/tomcat-源码分析-2-整体架构/">tomcat源码分析-2-整体架构</a>
           </li>
         
       </ul>
@@ -691,7 +633,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2017 Parallel World<br>
+      &copy; 2018 Parallel World<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
