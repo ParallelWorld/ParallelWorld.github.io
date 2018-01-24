@@ -66,7 +66,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="tool," />
 
 
 
@@ -80,13 +80,14 @@
 
 
 <meta name="description" content="公司目前用的 cocoapods 版本是 0.35，而平时自己研究别人源码用的都是 1.0 以上的版本。如果同时安装两个版本，再使用 pod 命令时，总是产生冲突，容易出错。此时两个版本的 cocoapods 会安装在同一个环境下，所以考虑如何让两个版本的 ，甚至多个版本的 cocoapods 安装在不同的环境下，那么版本共存和切换就有了可能性。 渔首先我们从 cocoapods 是如何安装的入手">
+<meta name="keywords" content="tool">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何让 Cocoapods 不同版本共存">
 <meta property="og:url" content="http://parallelworld.pw/2017/01/04/switch-version-of-cocoapods/index.html">
 <meta property="og:site_name" content="平行世界">
 <meta property="og:description" content="公司目前用的 cocoapods 版本是 0.35，而平时自己研究别人源码用的都是 1.0 以上的版本。如果同时安装两个版本，再使用 pod 命令时，总是产生冲突，容易出错。此时两个版本的 cocoapods 会安装在同一个环境下，所以考虑如何让两个版本的 ，甚至多个版本的 cocoapods 安装在不同的环境下，那么版本共存和切换就有了可能性。 渔首先我们从 cocoapods 是如何安装的入手">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-28T02:51:20.000Z">
+<meta property="og:updated_time" content="2018-01-24T02:56:08.833Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何让 Cocoapods 不同版本共存">
 <meta name="twitter:description" content="公司目前用的 cocoapods 版本是 0.35，而平时自己研究别人源码用的都是 1.0 以上的版本。如果同时安装两个版本，再使用 pod 命令时，总是产生冲突，容易出错。此时两个版本的 cocoapods 会安装在同一个环境下，所以考虑如何让两个版本的 ，甚至多个版本的 cocoapods 安装在不同的环境下，那么版本共存和切换就有了可能性。 渔首先我们从 cocoapods 是如何安装的入手">
@@ -292,28 +293,6 @@
           </span>
 
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/工具/" itemprop="url" rel="index">
-                    <span itemprop="name">工具</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
 
           
             
@@ -365,7 +344,7 @@
       
         <p>公司目前用的 cocoapods 版本是 0.35，而平时自己研究别人源码用的都是 1.0 以上的版本。如果同时安装两个版本，再使用 <code>pod</code> 命令时，总是产生冲突，容易出错。此时两个版本的 cocoapods 会安装在同一个环境下，所以考虑如何让两个版本的 ，甚至多个版本的 cocoapods 安装在不同的环境下，那么版本共存和切换就有了可能性。</p>
 <h1 id="渔"><a href="#渔" class="headerlink" title="渔"></a>渔</h1><p>首先我们从 cocoapods 是如何安装的入手分析。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gem install cocoapods</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gem install cocoapods</span><br></pre></td></tr></table></figure>
 <p>这段代码是最基本的安装命令，执行后会安装最新的 cocoapods 版本。注意到，用的是 gem 命令，gem 又是个啥呢？</p>
 <h2 id="gem"><a href="#gem" class="headerlink" title="gem"></a>gem</h2><p><strong>gem 是封装起来的 Ruby 应用程序或代码库，终端使用的 gem 命令，是指通过 RubyGems 管理 Gem 包。也就是说 cocoapods 是一个 Ruby 代码包，用 gem 来安装。</strong></p>
 <p>如果有个管理工具，可以安装和管理多个 Ruby 环境，在每个 Ruby 环境中，用 gem 安装 cocoapods，不就实现了不同版本的 cocoapods 共存了吗？ruby 刚好有个版本管理工具，可以做到这一点。</p>
@@ -387,9 +366,9 @@
 <li>在某个 ruby 版本下，安装指定版本的 cocoapods，参见下面内容</li>
 </ol>
 <h2 id="如何正确的安装-cocoapods"><a href="#如何正确的安装-cocoapods" class="headerlink" title="如何正确的安装 cocoapods"></a>如何正确的安装 cocoapods</h2><p>如果你是 mac 的 10.11 及以上系统，需要使用命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gem install cocoapods -v &lt;Version&gt; -n /usr/local/bin</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gem install cocoapods -v &lt;Version&gt; -n /usr/local/bin</span><br></pre></td></tr></table></figure>
 <p>否则的话使用命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gem install cocoapods -v &lt;Version&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gem install cocoapods -v &lt;Version&gt;</span><br></pre></td></tr></table></figure>
 <h2 id="我安装的版本对应表"><a href="#我安装的版本对应表" class="headerlink" title="我安装的版本对应表"></a>我安装的版本对应表</h2><p>由于 ruby 版本不同，可安装的 cocoapods 版本也就不同，下面是我已经验证可行的版本对应关系。</p>
 <table>
 <thead>
@@ -431,6 +410,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tool/" rel="tag"># tool</a>
+          
+        </div>
       
 
       
@@ -551,7 +536,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -562,7 +547,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
