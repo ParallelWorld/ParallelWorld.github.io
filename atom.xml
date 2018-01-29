@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://parallelworld.pw/"/>
-  <updated>2018-01-29T03:35:01.000Z</updated>
+  <updated>2018-01-29T03:35:29.026Z</updated>
   <id>http://parallelworld.pw/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://parallelworld.pw/2018/01/29/mac%E7%89%88rtx%E5%8D%A1%E9%A1%BF/"/>
     <id>http://parallelworld.pw/2018/01/29/mac版rtx卡顿/</id>
     <published>2018-01-29T03:32:23.000Z</published>
-    <updated>2018-01-29T03:35:01.000Z</updated>
+    <updated>2018-01-29T03:35:29.026Z</updated>
     
     <content type="html"><![CDATA[<p>公司内部用的聊天工具是 rtx，刚开始还好好的，但用一段时间就会特别卡，尤其是搜索人名的时候，卡的都不能动了。猜测是缓存问题，所以找到缓存，删除即可。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/Library/Application Support/RTXC/accounts</span><br></pre></td></tr></table></figure>]]></content>
     
@@ -35,6 +35,8 @@
     
     </summary>
     
+    
+      <category term="tool" scheme="http://parallelworld.pw/tags/tool/"/>
     
   </entry>
   
